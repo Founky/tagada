@@ -7,6 +7,7 @@
 
 uint8_t ram [RAM_SIZE];
 
+
 void init() {
   memset(ram, 0, RAM_SIZE);
   initCore();
