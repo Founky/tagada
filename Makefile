@@ -1,7 +1,7 @@
 CC = gcc
 LD = ld
 CFLAGS = -Wall -W -g -Werror
-LDFLAGS = -lc
+LDFLAGS = -lc --entry main
 SOURCES = src/main.c
 OBJECTS = $(call SRC_2_OBJ, $(SOURCES))
 
@@ -12,9 +12,9 @@ endef
 all: tagada
 
 tagada: $(OBJECTS)
-	@echo "  [LD]    $< -> $@"
+	@echo "  [LD]    $^ -> $@"
 	@mkdir -p bin
-	@$(CC) $(LDFLAGS) $< -o bin/$@
+	@$(LD) $(LDFLAGS) $^ -o bin/$@
 
 build/%.o: src/%.c
 	@mkdir -p $(dir $@)
