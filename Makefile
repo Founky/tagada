@@ -1,6 +1,6 @@
 CC = gcc
 LD = ld
-CFLAGS = -Wall -W -g
+CFLAGS = -Wall -W -g -Werror
 LDFLAGS = -lc
 SOURCES = src/main.c
 OBJECTS = $(call SRC_2_OBJ, $(SOURCES))
