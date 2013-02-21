@@ -114,3 +114,11 @@ uint16_t decodeBValue(uint16_t instruction) {
   }
   return 0;
 }
+
+uint8_t *decodeAAddress(uint16_t instruction) {
+  return (uint8_t *)&ram;
+}
+
+uint8_t *decodeBAddress(uint16_t instruction) {
+  return (uint8_t *)&ram;
+}
