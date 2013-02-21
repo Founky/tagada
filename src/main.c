@@ -2,8 +2,7 @@
 #include <stdint.h>
 
 #include "core.h"
-
-#define RAM_SIZE 0x20000 /* in bytes */
+#include "ram.h"
 
 uint8_t ram [RAM_SIZE];
 
@@ -16,5 +15,6 @@ void init() {
 int main () {
 
   init();
+  run();
   return 0;
 }
