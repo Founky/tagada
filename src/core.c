@@ -279,23 +279,45 @@ void sub(uint16_t instruction) {
     regs.EX = 0x0000;
   }
 }
-/* sets b to a * b (unsigned). EX is set to 16 lower bits of the multiplication */
+/* sets b to a * b (unsigned). EX is set to 16 upper bits of the multiplication */
 void mul(uint16_t instruction) {
-  uint16_t opA = decodeAValue(instruction);
-  uint16_t opB = decodeBValue(instruction);
-  *decodeBAddress(instruction) = opB * opA;
-  regs.EX = (opB * opA) & 0xffff;
+  uint32_t opA = (uint32_t)decodeAValue(instruction);
+  uint32_t opB = (uint32_t)decodeBValue(instruction);
+  *decodeBAddress(instruction) = (uint16_t)(opB * opA);
+  regs.EX = (uint16_t)((opB * opA) >> 16);
 }
-/* sets b to a * b (signed). EX is set to 16 lower bits of the multiplication */
+/* sets b to a * b (signed). EX is set to 16 upper bits of the multiplication */
 void mli(uint16_t instruction) {
-  int16_t opA = decodeAValue(instruction);
-  int16_t opB = decodeBValue(instruction);
-  *decodeBAddress(instruction) = opB * opA;
-  regs.EX = (opB * opA) & 0xffff;
+  int32_t opA = (int32_t)decodeAValue(instruction);
+  int32_t opB = (int32_t)decodeBValue(instruction);
+  *decodeBAddress(instruction) = (int16_t)(opB * opA);
+  regs.EX = (uint16_t)((opB * opA) >> 16);
 }
+/* sets b to b / a (unsigned). Sets b to 0 if a is 0 
+ * EX is set to 16 lower bits of the division */
 void div(uint16_t instruction) {
+  uint32_t opA = decodeAValue(instruction);
+  uint32_t opB = decodeBValue(instruction);
+  if (opA == 0) {
+    *decodeBAddress(instruction) = 0;
+    regs.EX = 0;
+  } else {
+    *decodeBAddress(instruction) = (uint16_t)(opA / opB);
+    regs.EX = (uint16_t)((opA / opB) & 0x0000ffff);
+  }
 }
+/* sets b to b / a (unsigned). Sets b to 0 if a is 0 
+ * EX is set to 16 lower bits of the division */
 void dvi(uint16_t instruction) {
+  int32_t opA = (int32_t)decodeAValue(instruction);
+  int32_t opB = (int32_t)decodeBValue(instruction);
+  if (opA == 0) {
+    *decodeBAddress(instruction) = 0;
+    regs.EX = 0;
+  } else {
+    *decodeBAddress(instruction) = (int16_t)(opA / opB);
+    regs.EX = (uint16_t)((opA / opB) & 0x0000ffff);
+  }
 }
 void mod(uint16_t instruction) {
 }
