@@ -4,7 +4,7 @@
 #include "core.h"
 #include "ram.h"
 
-uint8_t ram [RAM_SIZE];
+uint16_t ram [RAM_SIZE];
 
 void init() {
   memset(ram, 0, RAM_SIZE);

@@ -21,6 +21,7 @@ struct {
 
 void initCore() {
   memset(&regs, 0, 12 * sizeof(uint16_t));
+  regs.SP = RAM_SIZE - 1;
 }
 
 void run() {
@@ -181,7 +182,7 @@ uint16_t decodeAValue(uint16_t instruction) {
     return ram[*((uint16_t *)&regs + v - 0x08)];
     // Ram[reg + nextword]
   } else if (v < 0x18) {
-    return ram[*((uint16_t *)&regs + v - 0x10) + ram[regs.PC + 0x02]];
+    return ram[*((uint16_t *)&regs + v - 0x10) + ram[regs.PC + 0x01]];
     // ???
   } else if (v == 0x18) {
     // ???
@@ -199,10 +200,10 @@ uint16_t decodeAValue(uint16_t instruction) {
     return ram[regs.EX];
     // ram[next word]
   } else if (v == 0x1e) {
-    return ram[ram[regs.PC + 0x02]];
+    return ram[ram[regs.PC + 0x01]];
     // nextword
   } else if (v == 0x1f) {
-    return ram[regs.PC + 0x02];
+    return ram[regs.PC + 0x01];
     // ??? 
   } else if (v <= 0x3f) {
   }
@@ -219,7 +220,7 @@ uint16_t decodeBValue(uint16_t instruction) {
     return ram[*((uint16_t *)&regs + v - 0x08)];
     // Ram[reg + nextword]
   } else if (v < 0x18) {
-    return ram[*((uint16_t *)&regs + v - 0x10) + ram[regs.PC + 0x02]];
+    return ram[*((uint16_t *)&regs + v - 0x10) + ram[regs.PC + 0x01]];
     // ???
   } else if (v == 0x18) {
     // ???
@@ -237,10 +238,10 @@ uint16_t decodeBValue(uint16_t instruction) {
     return ram[regs.EX];
     // ram[next word]
   } else if (v == 0x1e) {
-    return ram[ram[regs.PC + 0x02]];
+    return ram[ram[regs.PC + 0x01]];
     // nextword
   } else if (v == 0x1f) {
-    return ram[regs.PC + 0x02];
+    return ram[regs.PC + 0x01];
   }
   return 0;
 }

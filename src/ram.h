@@ -3,8 +3,8 @@
 
 #include <stdint.h>
 
-#define RAM_SIZE 0x20000 /* in bytes */
+#define RAM_SIZE 0x10000 /* in words of 16 bits */
 
-extern uint8_t ram[RAM_SIZE];
+extern uint16_t ram[RAM_SIZE];
 
 #endif
