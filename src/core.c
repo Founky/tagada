@@ -253,15 +253,45 @@ uint8_t *decodeBAddress(uint16_t instruction) {
   return (uint8_t *)&ram;
 }
 
+/* sets b to a */
 void set(uint16_t instruction) {
+  *decodeBAddress(instruction) = decodeAValue(instruction);
 }
+/* sets b to b + a, EX to 1 if overflow, else 0 */
 void add(uint16_t instruction) {
+  uint16_t opA = decodeAValue(instruction);
+  uint16_t opB = decodeBValue(instruction);
+  *decodeBAddress(instruction) = opB + opA;
+  if (opB + opA > 0xffff) {
+    regs.EX = 0x0001;
+  } else {
+    regs.EX = 0x0000;
+  }
 }
+/* sets b to b - a, EX to 0xffff if underflow, else 0 */
 void sub(uint16_t instruction) {
+  uint16_t opA = decodeAValue(instruction);
+  uint16_t opB = decodeBValue(instruction);
+  *decodeBAddress(instruction) = opB - opA;
+  if (opA > opB) {
+    regs.EX = 0xffff;
+  } else {
+    regs.EX = 0x0000;
+  }
 }
+/* sets b to a * b (unsigned). EX is set to 16 lower bits of the multiplication */
 void mul(uint16_t instruction) {
+  uint16_t opA = decodeAValue(instruction);
+  uint16_t opB = decodeBValue(instruction);
+  *decodeBAddress(instruction) = opB * opA;
+  regs.EX = (opB * opA) & 0xffff;
 }
+/* sets b to a * b (signed). EX is set to 16 lower bits of the multiplication */
 void mli(uint16_t instruction) {
+  int16_t opA = decodeAValue(instruction);
+  int16_t opB = decodeBValue(instruction);
+  *decodeBAddress(instruction) = opB * opA;
+  regs.EX = (opB * opA) & 0xffff;
 }
 void div(uint16_t instruction) {
 }
