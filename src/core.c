@@ -296,8 +296,8 @@ void mli(uint16_t instruction) {
 /* sets b to b / a (unsigned). Sets b to 0 if a is 0 
  * EX is set to 16 lower bits of the division */
 void div(uint16_t instruction) {
-  uint32_t opA = decodeAValue(instruction);
-  uint32_t opB = decodeBValue(instruction);
+  uint32_t opA = (uint32_t)decodeAValue(instruction);
+  uint32_t opB = (uint32_t)decodeBValue(instruction);
   if (opA == 0) {
     *decodeBAddress(instruction) = 0;
     regs.EX = 0;
@@ -306,7 +306,7 @@ void div(uint16_t instruction) {
     regs.EX = (uint16_t)((opA / opB) & 0x0000ffff);
   }
 }
-/* sets b to b / a (unsigned). Sets b to 0 if a is 0 
+/* sets b to b / a (signed). Sets b to 0 if a is 0 
  * EX is set to 16 lower bits of the division */
 void dvi(uint16_t instruction) {
   int32_t opA = (int32_t)decodeAValue(instruction);
@@ -319,15 +319,31 @@ void dvi(uint16_t instruction) {
     regs.EX = (uint16_t)((opA / opB) & 0x0000ffff);
   }
 }
+/* sets b to b%a (unsigned). if a==0, sets b to 0 instead */
 void mod(uint16_t instruction) {
+  uint16_t opA = decodeAValue(instruction);
+  uint16_t opB = decodeBValue(instruction);
+  if (opA == 0) {
+    *decodeBAddress(instruction) = 0;
+  } else {
+    *decodeBAddress(instruction) = opB % opA;
+  }
 }
+/* sets b to b%a (signed). if a==0, sets b to 0 instead */
 void mdi(uint16_t instruction) {
+  /* TODO: Implement mod for signed numbers */
 }
+/* sets b to b&a */
 void and(uint16_t instruction) {
+  *decodeBAddress(instruction) = decodeBValue(instruction) & decodeAValue(instruction);
 }
+/* sets b to b|a */
 void bor(uint16_t instruction) {
+  *decodeBAddress(instruction) = decodeBValue(instruction) | decodeAValue(instruction);
 }
+/* sets b to b^a */
 void xor(uint16_t instruction) {
+  *decodeBAddress(instruction) = decodeBValue(instruction) ^ decodeAValue(instruction);
 }
 void shr(uint16_t instruction) {
 }
