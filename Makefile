@@ -2,7 +2,7 @@ CC = gcc
 LD = ld
 CFLAGS = -Wall -g -Werror
 LDFLAGS =
-SOURCES = src/main.c src/core.c
+SOURCES = src/main.c src/core.c src/instructions.c
 OBJECTS = $(call SRC_2_OBJ, $(SOURCES))
 
 define SRC_2_OBJ
