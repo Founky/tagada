@@ -231,40 +231,98 @@ void asr(uint16_t instruction) {
 void shl(uint16_t instruction) {
 }
 
+/* performs next instruction only if (b&a)!=0 */
 void ifb(uint16_t instruction) {
+  if (!((decodeBValue(instruction) & decodeAValue(instruction)) != 0)) {
+   regs.PC += 1;
+  } 
 }
 
+/* performs next instruction only if (b&a)==0 */
 void ifc(uint16_t instruction) {
+  if (!((decodeBValue(instruction) & decodeAValue(instruction)) == 0)) {
+   regs.PC += 1;
+  }
 }
 
+/* performs next instruction only if b==a */
 void ife(uint16_t instruction) {
+  if (!(decodeBValue(instruction) == decodeAValue(instruction))) {
+   regs.PC += 1;
+  }
 }
 
+/* performs next instruction only if b!=a */
 void ifn(uint16_t instruction) {
+  if (!(decodeBValue(instruction) != decodeAValue(instruction))) {
+   regs.PC += 1;
+  }
 }
 
+/* performs next instruction only if b>a */
 void ifg(uint16_t instruction) {
+  if (!(decodeBValue(instruction) > decodeAValue(instruction))) {
+   regs.PC += 1;
+  }
 }
 
+/* performs next instruction only if b>a (signed) */
 void ifa(uint16_t instruction) {
+  if (!((int16_t)(decodeBValue(instruction)) > (int16_t)(decodeAValue(instruction)))) {
+   regs.PC += 1;
+  }
 }
 
+/* performs next instruction only if b<a */
 void ifl(uint16_t instruction) {
+  if (!(decodeBValue(instruction) < decodeAValue(instruction))) {
+   regs.PC += 1;
+  }
 }
 
+/* performs next instruction only if b<a (signed) */
 void ifu(uint16_t instruction) {
+  if (!((int16_t)(decodeBValue(instruction)) < (int16_t)(decodeAValue(instruction)))) {
+   regs.PC += 1;
+  }
 }
 
+/* sets b to b+a+EX, sets EX to 0x0001 if there is an overflow, 0x0 otherwise */
 void adx(uint16_t instruction) {
+  uint16_t opA = decodeAValue(instruction);
+  uint16_t opB = decodeBValue(instruction);
+  *decodeBAddress(instruction) = opB + opA + regs.EX;
+  if (opB + opA + regs.EX > 0xffff) {
+    regs.EX = 0x0001;
+  } else {
+    regs.EX = 0x0000;
+  }
 }
 
+/* sets b to b-a-EX, sets EX to 0xffff if there is an underflow, 0x0 otherwise */
 void sbx(uint16_t instruction) {
+  uint16_t opA = decodeAValue(instruction);
+  uint16_t opB = decodeBValue(instruction);
+  *decodeBAddress(instruction) = opB - opA - regs.EX;
+  if (opA + regs.EX > opB) {
+    regs.EX = 0xffff;
+  } else {
+    regs.EX = 0x0000;
+  }
 }
 
+/* sets b to a, then increases I and J by 1*/
 void sdi(uint16_t instruction) {
+  *decodeBAddress(instruction) = decodeAValue(instruction);
+  regs.I += 1;
+  regs.J += 1;
 }
 
+/* sets b to a, then decreases I and J by 1*/
 void std(uint16_t instruction) {
+  *decodeBAddress(instruction) = decodeAValue(instruction);
+  regs.I -= 1;
+  regs.J -= 1;
 }
 
 void jsr(uint16_t instruction) {
