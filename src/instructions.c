@@ -42,9 +42,9 @@ uint16_t decodeAValue(uint16_t instruction) {
     /* Return [SP] */
   } else if (v == 0x19) {
     return ram[regs.SP];
-    /* Return the thing below dude */
+    /* ram[SP + nextword] */
   } else if (v == 0x1a) {
-    return ram[regs.SP + ram[regs.PC + 1]];
+    return ram[regs.SP + ram[regs.PC + 0x01]];
     // SP
   } else if (v == 0x1b) {
     return ram[regs.SP];
@@ -62,29 +62,32 @@ uint16_t decodeAValue(uint16_t instruction) {
     return ram[regs.PC + 0x01];
     // Small literal value from -1 to 0x1e (30)
   } else if (v <= 0x3f) {
-    return 0x3f - v - 1;
+    return 0x3f - v - 0x01;
   }
-  return 0;
+  return 0x00;
 }
 
 /* returns the appropriate value depending on the b value of the instruction */
 uint16_t decodeBValue(uint16_t instruction) {
   uint8_t v = OP_B(instruction);
-  // Registers
+  /* Registers */
   if (v < 0x08) {
     return *((uint16_t *)&regs + v);
-    // Ram[reg]
+    /* Ram[reg] */
   } else if (v < 0x10) {
     return ram[*((uint16_t *)&regs + v - 0x08)];
-    // Ram[reg + nextword]
+    /* Ram[reg + nextword] */
   } else if (v < 0x18) {
     return ram[*((uint16_t *)&regs + v - 0x10) + ram[regs.PC + 0x01]];
-    // ???
+    /* POP Meaningless for B value */
   } else if (v == 0x18) {
-    // ???
+    return 0x00;
+    /* Return [SP] */
   } else if (v == 0x19) {
-    // ???
+    return ram[regs.SP];
+    /* ram[SP + nextword] */
   } else if (v == 0x1a) {
+    return ram[regs.SP + ram[regs.PC + 0x01]];
     // SP
   } else if (v == 0x1b) {
     return ram[regs.SP];
