@@ -70,27 +70,27 @@ void run() {
         /* Mdi b, a*/
         mdi(instruction);
         break;
-      case 0x0A :
+      case 0x0a :
         /* And b, a */
         and(instruction);
         break;
-      case 0x0B :
+      case 0x0b :
         /* Bor b, a */
         bor(instruction);
         break;
-      case 0x0C :
+      case 0x0c :
         /* Xor b, a */
         xor(instruction);
         break;
-      case 0x0D :
+      case 0x0d :
         /* Shr b, a */
         shr(instruction);
         break;
-      case 0x0E :
+      case 0x0e :
         /* Asr b, a */
         asr(instruction);
         break;
-      case 0x0F :
+      case 0x0f :
         /* Shl b, a */
         shl(instruction);
         break;
@@ -130,23 +130,23 @@ void run() {
         break;
       case 0x19 :
         break;
-      case 0x1A :
+      case 0x1a :
         /* Adx b, a */
         adx(instruction);
         break;
-      case 0x1B :
+      case 0x1b :
         /* Sbx b, a */
         sbx(instruction);
         break;
-      case 0x1C :
+      case 0x1c :
         break;
-      case 0x1D :
+      case 0x1d :
         break;
-      case 0x1E :
+      case 0x1e :
         /* Sdi b, a */
         sdi(instruction);
         break;
-      case 0x1F :
+      case 0x1f :
         /* Std b, a */
         std(instruction);
         break;
