@@ -79,7 +79,7 @@ uint16_t decodeBValue(uint16_t instruction) {
     /* Ram[reg + nextword] */
   } else if (v < 0x18) {
     return ram[*((uint16_t *)&regs + v - 0x10) + ram[regs.PC + 0x01]];
-    /* POP Meaningless for B value */
+    /* PUSH Meaningless for B value */
   } else if (v == 0x18) {
     return 0x00;
     /* Return [SP] */
@@ -108,13 +108,49 @@ uint16_t decodeBValue(uint16_t instruction) {
 }
 
 /* returns the appropriate address depending on the a value of the instruction */
-uint8_t *decodeAAddress(uint16_t instruction) {
-  return (uint8_t *)&ram;
+uint16_t *decodeAAddress(uint16_t instruction) {
+  return (uint16_t *)&ram;
 }
 
 /* returns the appropriate address depending on the b value of the instruction */
-uint8_t *decodeBAddress(uint16_t instruction) {
-  return (uint8_t *)&ram;
+uint16_t *decodeBAddress(uint16_t instruction) {
+  uint8_t v = OP_B(instruction);
+  /* Registers */
+  if (v < 0x08) {
+    return (uint16_t *)&regs + v;
+    /* Ram[reg] */
+  } else if (v < 0x10) {
+    return &ram[*((uint16_t *)&regs + v - 0x08)];
+    /* Ram[reg + nextword] */
+  } else if (v < 0x18) {
+    return &ram[*((uint16_t *)&regs + v - 0x10) + ram[regs.PC + 0x01]];
+    /* Push : increment SP and return &ram[SP]*/
+  } else if (v == 0x18) {
+    return &ram[++regs.SP];
+    /* Return [SP] */
+  } else if (v == 0x19) {
+    return &ram[regs.SP];
+    /* ram[SP + nextword] */
+  } else if (v == 0x1a) {
+    return &ram[regs.SP + ram[regs.PC + 0x01]];
+    // SP
+  } else if (v == 0x1b) {
+    return &ram[regs.SP];
+    // PC
+  } else if (v == 0x1c) {
+    return &ram[regs.PC];
+    // EX
+  } else if (v == 0x1d) {
+    return &ram[regs.EX];
+    // ram[next word]
+  } else if (v == 0x1e) {
+    return &ram[ram[regs.PC + 0x01]];
+    // nextword
+  } else if (v == 0x1f) {
+    return &ram[regs.PC + 0x01];
+  }
+  // Never
+  return (uint16_t *)&ram;
 }
 
 /* instructions routines */ 
