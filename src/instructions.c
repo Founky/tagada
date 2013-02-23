@@ -104,11 +104,15 @@ uint16_t decodeBValue(uint16_t instruction) {
   return 0;
 }
 
+/* returns the appropriate address depending on the a value of the instruction */
+uint8_t *decodeAAddress(uint16_t instruction) {
+  return (uint8_t *)&ram;
+}
+
 /* returns the appropriate address depending on the b value of the instruction */
 uint8_t *decodeBAddress(uint16_t instruction) {
   return (uint8_t *)&ram;
 }
-
 
 /* instructions routines */ 
 /* sets b to a */
@@ -324,16 +328,24 @@ void std(uint16_t instruction) {
   regs.J -= 1;
 }
 
+/* pushes the address of the next instruction to the stack,
+ * then sets PC to a */
 void jsr(uint16_t instruction) {
+  ram[regs.SP--] = regs.PC + 1;
+  regs.PC = decodeAValue(instruction);
 }
 
 void softInteruption(uint16_t instruction) {
 }
 
+/* sets a to IA */
 void iag(uint16_t instruction) {
+  *decodeAAddress(instruction) = regs.IA;
 }
 
+/* sets IA to a */
 void ias(uint16_t instruction) {
+  regs.IA = decodeAValue(instruction);
 }
 
 void rfi(uint16_t instruction) {
