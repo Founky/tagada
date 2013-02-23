@@ -334,7 +334,7 @@ void std(uint16_t instruction) {
 /* pushes the address of the next instruction to the stack,
  * then sets PC to a */
 void jsr(uint16_t instruction) {
-  ram[regs.SP--] = regs.PC + 1;
+  ram[--regs.SP] = regs.PC + 1;
   regs.PC = decodeAValue(instruction);
 }
 
