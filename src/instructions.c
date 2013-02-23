@@ -88,19 +88,19 @@ uint16_t decodeBValue(uint16_t instruction) {
     /* ram[SP + nextword] */
   } else if (v == 0x1a) {
     return ram[regs.SP + ram[regs.PC + 0x01]];
-    // SP
+    /* SP */
   } else if (v == 0x1b) {
     return ram[regs.SP];
-    // PC
+    /* PC */
   } else if (v == 0x1c) {
     return ram[regs.PC];
-    // EX
+    /* EX */
   } else if (v == 0x1d) {
     return ram[regs.EX];
-    // ram[next word]
+    /* ram[next word] */
   } else if (v == 0x1e) {
     return ram[ram[regs.PC + 0x01]];
-    // nextword
+    /* nextword */
   } else if (v == 0x1f) {
     return ram[regs.PC + 0x01];
   }
@@ -109,6 +109,43 @@ uint16_t decodeBValue(uint16_t instruction) {
 
 /* returns the appropriate address depending on the a value of the instruction */
 uint16_t *decodeAAddress(uint16_t instruction) {
+  uint8_t v = OP_A(instruction);
+  /* Registers */
+  if (v < 0x08) {
+    return (uint16_t *)&regs + v;
+    /* Ram[reg] */
+  } else if (v < 0x10) {
+    return &ram[*((uint16_t *)&regs + v - 0x08)];
+    /* Ram[reg + nextword] */
+  } else if (v < 0x18) {
+    return &ram[*((uint16_t *)&regs + v - 0x10) + ram[regs.PC + 0x01]];
+    /* Pops the stack and return the head as value */
+  } else if (v == 0x18) {
+    return &ram[regs.SP--];
+    /* Return [SP] */
+  } else if (v == 0x19) {
+    return &ram[regs.SP];
+    /* ram[SP + nextword] */
+  } else if (v == 0x1a) {
+    return &ram[regs.SP + ram[regs.PC + 0x01]];
+    /* SP */
+  } else if (v == 0x1b) {
+    return &ram[regs.SP];
+    /* PC */
+  } else if (v == 0x1c) {
+    return &ram[regs.PC];
+    /* EX */
+  } else if (v == 0x1d) {
+    return &ram[regs.EX];
+    /* ram[next word] */
+  } else if (v == 0x1e) {
+    return &ram[ram[regs.PC + 0x01]];
+    /* nextword */
+  } else if (v == 0x1f) {
+    return &ram[regs.PC + 0x01];
+    /* Small literal value no way Here */
+  } else if (v <= 0x3f) {}
+  /* Never */
   return (uint16_t *)&ram;
 }
 
@@ -124,7 +161,7 @@ uint16_t *decodeBAddress(uint16_t instruction) {
     /* Ram[reg + nextword] */
   } else if (v < 0x18) {
     return &ram[*((uint16_t *)&regs + v - 0x10) + ram[regs.PC + 0x01]];
-    /* Push : increment SP and return &ram[SP]*/
+    /* Push : increment SP and return &ram[SP] */
   } else if (v == 0x18) {
     return &ram[++regs.SP];
     /* Return [SP] */
@@ -133,23 +170,23 @@ uint16_t *decodeBAddress(uint16_t instruction) {
     /* ram[SP + nextword] */
   } else if (v == 0x1a) {
     return &ram[regs.SP + ram[regs.PC + 0x01]];
-    // SP
+    /* SP */
   } else if (v == 0x1b) {
     return &ram[regs.SP];
-    // PC
+    /* PC */
   } else if (v == 0x1c) {
     return &ram[regs.PC];
-    // EX
+    /* EX */
   } else if (v == 0x1d) {
     return &ram[regs.EX];
-    // ram[next word]
+    /* ram[next word] */
   } else if (v == 0x1e) {
     return &ram[ram[regs.PC + 0x01]];
-    // nextword
+    /* nextword */
   } else if (v == 0x1f) {
     return &ram[regs.PC + 0x01];
   }
-  // Never
+  /* Never */
   return (uint16_t *)&ram;
 }
 
