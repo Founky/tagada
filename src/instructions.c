@@ -224,7 +224,7 @@ void sub(uint16_t instruction) {
 void mul(uint16_t instruction) {
   uint32_t opA = (uint32_t)decodeAValue(instruction);
   uint32_t opB = (uint32_t)decodeBValue(instruction);
-  *decodeBAddress(instruction) = (uint16_t)(opB * opA);
+  *decodeBAddress(instruction) = (opB * opA) & 0x0000ffff;
   regs.EX = (uint16_t)((opB * opA) >> 16);
 }
 
@@ -232,12 +232,13 @@ void mul(uint16_t instruction) {
 void mli(uint16_t instruction) {
   int32_t opA = (int32_t)decodeAValue(instruction);
   int32_t opB = (int32_t)decodeBValue(instruction);
-  *decodeBAddress(instruction) = (int16_t)(opB * opA);
+  *decodeBAddress(instruction) = (uint16_t)(opB * opA) & 0x0000ffff;
   regs.EX = (uint16_t)((opB * opA) >> 16);
 }
 
-/* sets b to b / a (unsigned). Sets b to 0 if a is 0 
- * EX is set to 16 lower bits of the division */
+/* divides b by a, rounds down to the nearest whole number 
+ * and stores the result in b. 
+ * The fractional part of the result is stored in the EX register */
 void div(uint16_t instruction) {
   uint32_t opA = (uint32_t)decodeAValue(instruction);
   uint32_t opB = (uint32_t)decodeBValue(instruction);
@@ -245,13 +246,14 @@ void div(uint16_t instruction) {
     *decodeBAddress(instruction) = 0;
     regs.EX = 0;
   } else {
-    *decodeBAddress(instruction) = (uint16_t)(opA / opB);
-    regs.EX = (uint16_t)((opA / opB) & 0x0000ffff);
+    *decodeBAddress(instruction) = (uint16_t)(opB / opA);
+    regs.EX = (uint16_t)(((opB << 16) / opA) & 0x0000ffff);
   }
 }
 
-/* sets b to b / a (signed). Sets b to 0 if a is 0 
- * EX is set to 16 lower bits of the division */
+/* divides b by a (signed), rounds down to the nearest whole number 
+ * and stores the result in b. 
+ * The fractional part of the result is stored in the EX register */
 void dvi(uint16_t instruction) {
   int32_t opA = (int32_t)decodeAValue(instruction);
   int32_t opB = (int32_t)decodeBValue(instruction);
@@ -259,8 +261,8 @@ void dvi(uint16_t instruction) {
     *decodeBAddress(instruction) = 0;
     regs.EX = 0;
   } else {
-    *decodeBAddress(instruction) = (int16_t)(opA / opB);
-    regs.EX = (uint16_t)((opA / opB) & 0x0000ffff);
+    *decodeBAddress(instruction) = (uint16_t)(opB / opA);
+    regs.EX = (uint16_t)(((opB << 16)/ opA) & 0x0000ffff);
   }
 }
 
@@ -407,7 +409,7 @@ void std(uint16_t instruction) {
 /* pushes the address of the next instruction to the stack,
  * then sets PC to a */
 void jsr(uint16_t instruction) {
-  ram[regs.SP--] = regs.PC + 1;
+  ram[--regs.SP] = regs.PC + 1;
   regs.PC = decodeAValue(instruction);
 }
 

@@ -8,7 +8,8 @@
 
 void initCore() {
   memset(&regs, 0, 12 * sizeof(uint16_t));
-  regs.SP = RAM_SIZE - 1; /* the stacks starts at the end of the ram */
+  /* note : when set to 0
+   * SP virtually points to the first slot of the stack + 1 */
 }
 
 void specialInstruction(uint16_t instruction);
