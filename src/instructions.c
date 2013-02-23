@@ -45,22 +45,22 @@ uint16_t decodeAValue(uint16_t instruction) {
     /* ram[SP + nextword] */
   } else if (v == 0x1a) {
     return ram[regs.SP + ram[regs.PC + 0x01]];
-    // SP
+    /* SP */
   } else if (v == 0x1b) {
     return ram[regs.SP];
-    // PC
+    /* PC */
   } else if (v == 0x1c) {
     return ram[regs.PC];
-    // EX
+    /* EX */
   } else if (v == 0x1d) {
     return ram[regs.EX];
-    // ram[next word]
+    /* ram[next word] */
   } else if (v == 0x1e) {
     return ram[ram[regs.PC + 0x01]];
-    // nextword
+    /* nextword */
   } else if (v == 0x1f) {
     return ram[regs.PC + 0x01];
-    // Small literal value from -1 to 0x1e (30)
+    /* Small literal value from -1 to 0x1e (30) */
   } else if (v <= 0x3f) {
     return 0x3f - v - 0x01;
   }
@@ -104,7 +104,7 @@ uint16_t decodeBValue(uint16_t instruction) {
   } else if (v == 0x1f) {
     return ram[regs.PC + 0x01];
   }
-  return 0;
+  return 0x00;
 }
 
 /* returns the appropriate address depending on the a value of the instruction */
