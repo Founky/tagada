@@ -27,21 +27,24 @@
 /* returns the appropriate value depending on the a value of the instruction */
 uint16_t decodeAValue(uint16_t instruction) {
   uint8_t v = OP_A(instruction);
-  // Registers
+  /* Registers */
   if (v < 0x08) {
     return *((uint16_t *)&regs + v);
-    // Ram[reg]
+    /* Ram[reg] */
   } else if (v < 0x10) {
     return ram[*((uint16_t *)&regs + v - 0x08)];
-    // Ram[reg + nextword]
+    /* Ram[reg + nextword] */
   } else if (v < 0x18) {
     return ram[*((uint16_t *)&regs + v - 0x10) + ram[regs.PC + 0x01]];
-    // ???
+    /* Pops the stack and return the head as value */
   } else if (v == 0x18) {
-    // ???
+    return ram[regs.SP--];
+    /* Return [SP] */
   } else if (v == 0x19) {
-    // ???
+    return ram[regs.SP];
+    /* Return the thing below dude */
   } else if (v == 0x1a) {
+    return ram[regs.SP + ram[regs.PC + 1]];
     // SP
   } else if (v == 0x1b) {
     return ram[regs.SP];
@@ -57,8 +60,9 @@ uint16_t decodeAValue(uint16_t instruction) {
     // nextword
   } else if (v == 0x1f) {
     return ram[regs.PC + 0x01];
-    // ??? 
+    // Small literal value from -1 to 0x1e (30)
   } else if (v <= 0x3f) {
+    return 0x3f - v - 1;
   }
   return 0;
 }
@@ -98,11 +102,6 @@ uint16_t decodeBValue(uint16_t instruction) {
     return ram[regs.PC + 0x01];
   }
   return 0;
-}
-
-/* returns the appropriate address depending on the a value of the instruction */
-uint8_t *decodeAAddress(uint16_t instruction) {
-  return (uint8_t *)&ram;
 }
 
 /* returns the appropriate address depending on the b value of the instruction */
