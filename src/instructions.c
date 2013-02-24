@@ -192,12 +192,12 @@ uint16_t *decodeBAddress(uint16_t instruction) {
 
 /* instructions routines */ 
 /* sets b to a */
-void set(uint16_t instruction) {
+void setInst(uint16_t instruction) {
   *decodeBAddress(instruction) = decodeAValue(instruction);
 }
 
 /* sets b to b + a, EX to 1 if overflow, else 0 */
-void add(uint16_t instruction) {
+void addInst(uint16_t instruction) {
   uint16_t opA = decodeAValue(instruction);
   uint16_t opB = decodeBValue(instruction);
   *decodeBAddress(instruction) = opB + opA;
@@ -209,7 +209,7 @@ void add(uint16_t instruction) {
 }
 
 /* sets b to b - a, EX to 0xffff if underflow, else 0 */
-void sub(uint16_t instruction) {
+void subInst(uint16_t instruction) {
   uint16_t opA = decodeAValue(instruction);
   uint16_t opB = decodeBValue(instruction);
   *decodeBAddress(instruction) = opB - opA;
@@ -221,7 +221,7 @@ void sub(uint16_t instruction) {
 }
 
 /* sets b to a * b (unsigned). EX is set to 16 upper bits of the multiplication */
-void mul(uint16_t instruction) {
+void mulInst(uint16_t instruction) {
   uint32_t opA = (uint32_t)decodeAValue(instruction);
   uint32_t opB = (uint32_t)decodeBValue(instruction);
   *decodeBAddress(instruction) = (opB * opA) & 0x0000ffff;
@@ -229,7 +229,7 @@ void mul(uint16_t instruction) {
 }
 
 /* sets b to a * b (signed). EX is set to 16 upper bits of the multiplication */
-void mli(uint16_t instruction) {
+void mliInst(uint16_t instruction) {
   int32_t opA = (int32_t)decodeAValue(instruction);
   int32_t opB = (int32_t)decodeBValue(instruction);
   *decodeBAddress(instruction) = (uint16_t)(opB * opA) & 0x0000ffff;
@@ -239,7 +239,7 @@ void mli(uint16_t instruction) {
 /* divides b by a, rounds down to the nearest whole number 
  * and stores the result in b. 
  * The fractional part of the result is stored in the EX register */
-void div(uint16_t instruction) {
+void divInst(uint16_t instruction) {
   uint32_t opA = (uint32_t)decodeAValue(instruction);
   uint32_t opB = (uint32_t)decodeBValue(instruction);
   if (opA == 0) {
@@ -254,7 +254,7 @@ void div(uint16_t instruction) {
 /* divides b by a (signed), rounds down to the nearest whole number 
  * and stores the result in b. 
  * The fractional part of the result is stored in the EX register */
-void dvi(uint16_t instruction) {
+void dviInst(uint16_t instruction) {
   int32_t opA = (int32_t)decodeAValue(instruction);
   int32_t opB = (int32_t)decodeBValue(instruction);
   if (opA == 0) {
@@ -267,7 +267,7 @@ void dvi(uint16_t instruction) {
 }
 
 /* sets b to b%a (unsigned). if a==0, sets b to 0 instead */
-void mod(uint16_t instruction) {
+void modInst(uint16_t instruction) {
   uint16_t opA = decodeAValue(instruction);
   uint16_t opB = decodeBValue(instruction);
   if (opA == 0) {
@@ -278,7 +278,7 @@ void mod(uint16_t instruction) {
 }
 
 /* sets b to b%a (signed). if a==0, sets b to 0 instead */
-void mdi(uint16_t instruction) {
+void mdiInst(uint16_t instruction) {
   int16_t opA = decodeAValue(instruction);
   int16_t opB = decodeBValue(instruction);
   if (opA == 0) {
@@ -289,23 +289,23 @@ void mdi(uint16_t instruction) {
 }
 
 /* sets b to b&a */
-void and(uint16_t instruction) {
+void andInst(uint16_t instruction) {
   *decodeBAddress(instruction) = decodeBValue(instruction) & decodeAValue(instruction);
 }
 
 /* sets b to b|a */
-void bor(uint16_t instruction) {
+void borInst(uint16_t instruction) {
   *decodeBAddress(instruction) = decodeBValue(instruction) | decodeAValue(instruction);
 }
 
 /* sets b to b^a */
-void xor(uint16_t instruction) {
+void xorInst(uint16_t instruction) {
   *decodeBAddress(instruction) = decodeBValue(instruction) ^ decodeAValue(instruction);
 }
 
 /* shifts b to the right by a bits. 
  * EX = the lower a bits of b that were shifted out  */
-void shr(uint16_t instruction) {
+void shrInst(uint16_t instruction) {
   uint32_t opA = (uint32_t)decodeAValue(instruction);
   uint32_t opB = (uint32_t)decodeBValue(instruction);
   regs.EX = (uint16_t)((opB << 16) >> opA);
@@ -314,7 +314,7 @@ void shr(uint16_t instruction) {
 
 /* shifts b to the right by a bits (signed). 
  * EX = the lower a bits of b that were shifted out  */
-void asr(uint16_t instruction) {
+void asrInst(uint16_t instruction) {
   int32_t opA = (int32_t)decodeAValue(instruction);
   int32_t opB = (int32_t)decodeBValue(instruction);
   regs.EX = (uint16_t)((opB << 16) >> opA);
@@ -323,7 +323,7 @@ void asr(uint16_t instruction) {
 
 /* shifts b to the left by a bits (signed). 
  * EX = the upper a bits of b that were shifted out  */
-void shl(uint16_t instruction) {
+void shlInst(uint16_t instruction) {
   uint32_t opA = (uint32_t)decodeAValue(instruction);
   uint32_t opB = (uint32_t)decodeBValue(instruction);
   regs.EX = (uint16_t)((opB << opA) >> 16);
@@ -331,63 +331,63 @@ void shl(uint16_t instruction) {
 }
 
 /* performs next instruction only if (b&a)!=0 */
-void ifb(uint16_t instruction) {
+void ifbInst(uint16_t instruction) {
   if (!((decodeBValue(instruction) & decodeAValue(instruction)) != 0)) {
    regs.PC += 1;
   } 
 }
 
 /* performs next instruction only if (b&a)==0 */
-void ifc(uint16_t instruction) {
+void ifcInst(uint16_t instruction) {
   if (!((decodeBValue(instruction) & decodeAValue(instruction)) == 0)) {
    regs.PC += 1;
   }
 }
 
 /* performs next instruction only if b==a */
-void ife(uint16_t instruction) {
+void ifeInst(uint16_t instruction) {
   if (!(decodeBValue(instruction) == decodeAValue(instruction))) {
    regs.PC += 1;
   }
 }
 
 /* performs next instruction only if b!=a */
-void ifn(uint16_t instruction) {
+void ifnInst(uint16_t instruction) {
   if (!(decodeBValue(instruction) != decodeAValue(instruction))) {
    regs.PC += 1;
   }
 }
 
 /* performs next instruction only if b>a */
-void ifg(uint16_t instruction) {
+void ifgInst(uint16_t instruction) {
   if (!(decodeBValue(instruction) > decodeAValue(instruction))) {
    regs.PC += 1;
   }
 }
 
 /* performs next instruction only if b>a (signed) */
-void ifa(uint16_t instruction) {
+void ifaInst(uint16_t instruction) {
   if (!((int16_t)(decodeBValue(instruction)) > (int16_t)(decodeAValue(instruction)))) {
    regs.PC += 1;
   }
 }
 
 /* performs next instruction only if b<a */
-void ifl(uint16_t instruction) {
+void iflInst(uint16_t instruction) {
   if (!(decodeBValue(instruction) < decodeAValue(instruction))) {
    regs.PC += 1;
   }
 }
 
 /* performs next instruction only if b<a (signed) */
-void ifu(uint16_t instruction) {
+void ifuInst(uint16_t instruction) {
   if (!((int16_t)(decodeBValue(instruction)) < (int16_t)(decodeAValue(instruction)))) {
    regs.PC += 1;
   }
 }
 
 /* sets b to b+a+EX, sets EX to 0x0001 if there is an overflow, 0x0 otherwise */
-void adx(uint16_t instruction) {
+void adxInst(uint16_t instruction) {
   uint16_t opA = decodeAValue(instruction);
   uint16_t opB = decodeBValue(instruction);
   *decodeBAddress(instruction) = opB + opA + regs.EX;
@@ -399,7 +399,7 @@ void adx(uint16_t instruction) {
 }
 
 /* sets b to b-a-EX, sets EX to 0xffff if there is an underflow, 0x0 otherwise */
-void sbx(uint16_t instruction) {
+void sbxInst(uint16_t instruction) {
   uint16_t opA = decodeAValue(instruction);
   uint16_t opB = decodeBValue(instruction);
   *decodeBAddress(instruction) = opB - opA - regs.EX;
@@ -411,14 +411,14 @@ void sbx(uint16_t instruction) {
 }
 
 /* sets b to a, then increases I and J by 1*/
-void sdi(uint16_t instruction) {
+void sdiInst(uint16_t instruction) {
   *decodeBAddress(instruction) = decodeAValue(instruction);
   regs.I += 1;
   regs.J += 1;
 }
 
 /* sets b to a, then decreases I and J by 1*/
-void std(uint16_t instruction) {
+void stdInst(uint16_t instruction) {
   *decodeBAddress(instruction) = decodeAValue(instruction);
   regs.I -= 1;
   regs.J -= 1;
@@ -426,13 +426,13 @@ void std(uint16_t instruction) {
 
 /* pushes the address of the next instruction to the stack,
  * then sets PC to a */
-void jsr(uint16_t instruction) {
+void jsrInst(uint16_t instruction) {
   ram[--regs.SP] = regs.PC + 1;
   regs.PC = decodeAValue(instruction);
 }
 
 /* triggers a software interrupt with message a */
-void softInteruption(uint16_t instruction) {
+void intInst(uint16_t instruction) {
   if (regs.IA) {
     intQueing = 1;
     ram[--regs.SP] = regs.PC;
@@ -445,16 +445,16 @@ void softInteruption(uint16_t instruction) {
 }
 
 /* sets a to IA */
-void iag(uint16_t instruction) {
+void iagInst(uint16_t instruction) {
   *decodeAAddress(instruction) = regs.IA;
 }
 
 /* sets IA to a */
-void ias(uint16_t instruction) {
+void iasInst(uint16_t instruction) {
   regs.IA = decodeAValue(instruction);
 }
 
-void rfi(uint16_t instruction) {
+void rfiInst(uint16_t instruction) {
   intQueing = 0;
   regs.A = ram[regs.SP++];
   regs.PC = ram[regs.SP++];
@@ -463,7 +463,7 @@ void rfi(uint16_t instruction) {
 /* if a is nonzero, interrupts will be added to the queue
  * instead of triggered. if a is zero, interrupts will be
  * triggered as normal again */
-void iaq(uint16_t instruction) {
+void iaqInst(uint16_t instruction) {
   if (OP_A(instruction) == 0) {
     intQueing = 0;
   } else {
@@ -471,11 +471,11 @@ void iaq(uint16_t instruction) {
   }
 }
 
-void hwn(uint16_t instruction) {
+void hwnInst(uint16_t instruction) {
 }
 
-void hwq(uint16_t instruction) {
+void hwqInst(uint16_t instruction) {
 }
 
-void hwi(uint16_t instruction) {
+void hwiInst(uint16_t instruction) {
 }

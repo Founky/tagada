@@ -11,6 +11,7 @@
 
 #include "core.h"
 #include "ram.h"
+#include "instructions.h"
 
 #define MAGIC 0x10c
 
@@ -27,13 +28,13 @@ int init_suite_success(void) {
 int clean_suite_success(void) { return 0; }
 
 void testDecodeAValueRegister(void) {
-  uint16_t i = (0x00 << 10); /* Set a operand */
+  uint16_t i = SET_OP_A(0x00); /* Set a operand */
   decodeAValue(i);
   CU_ASSERT_EQUAL(decodeAValue(i), MAGIC);
 }
 
 void testDecodeAValueRegisterPointer(void) {
-  uint16_t i = (0x09 << 10); /* Set a operand */
+  uint16_t i = SET_OP_A(0x00); /* Set a operand */
   decodeAValue(i);
   CU_ASSERT_EQUAL(decodeAValue(i), MAGIC);
 }

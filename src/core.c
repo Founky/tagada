@@ -32,95 +32,95 @@ void run() {
         break;
       case 0x01 :
         /* Set b, a */
-        set(instruction);
+        setInst(instruction);
         break;
       case 0x02 : 
         /* Add b, a */
-        add(instruction);
+        addInst(instruction);
         break;
       case 0x03 :
         /* Sub b, a */
-        sub(instruction);
+        subInst(instruction);
         break;
       case 0x04 :
         /* Mul b, a */
-        mul(instruction);
+        mulInst(instruction);
         break;
       case 0x05 :
         /* Mli b, a */
-        mli(instruction);
+        mliInst(instruction);
         break;
       case 0x06 :
         /* Div b, a */
-        div(instruction);
+        divInst(instruction);
         break;
       case 0x07 :
         /* Dvi b, a */
-        dvi(instruction);
+        dviInst(instruction);
         break;
       case 0x08 :
         /* Mod b, a*/
-        mod(instruction);
+        modInst(instruction);
         break;
       case 0x09 :
         /* Mdi b, a*/
-        mdi(instruction);
+        mdiInst(instruction);
         break;
       case 0x0a :
         /* And b, a */
-        and(instruction);
+        andInst(instruction);
         break;
       case 0x0b :
         /* Bor b, a */
-        bor(instruction);
+        borInst(instruction);
         break;
       case 0x0c :
         /* Xor b, a */
-        xor(instruction);
+        xorInst(instruction);
         break;
       case 0x0d :
         /* Shr b, a */
-        shr(instruction);
+        shrInst(instruction);
         break;
       case 0x0e :
         /* Asr b, a */
-        asr(instruction);
+        asrInst(instruction);
         break;
       case 0x0f :
         /* Shl b, a */
-        shl(instruction);
+        shlInst(instruction);
         break;
       case 0x10 :
         /* Ifb b, a */
-        ifb(instruction);
+        ifbInst(instruction);
         break;
       case 0x11 :
         /* Ifc b, a */
-        ifc(instruction);
+        ifcInst(instruction);
         break;
       case 0x12 :
         /* Ife b, a */
-        ife(instruction);
+        ifeInst(instruction);
         break;
       case 0x13 :
         /* Ifn b, a */
-        ifn(instruction);
+        ifnInst(instruction);
         break;
       case 0x14 :
         /* Ifg b, a */
-        ifg(instruction);
+        ifgInst(instruction);
         break;
       case 0x15 :
         /* Ifa b, a */
-        ifa(instruction);
+        ifaInst(instruction);
         break;
       case 0x16 :
         /* Ifl b, a */
-        ifl(instruction);
+        iflInst(instruction);
         break;
       case 0x17 :
         /* Ifu b, a */
-        ifu(instruction);
+        ifuInst(instruction);
         break;
       case 0x18 :
         break;
@@ -128,11 +128,11 @@ void run() {
         break;
       case 0x1a :
         /* Adx b, a */
-        adx(instruction);
+        adxInst(instruction);
         break;
       case 0x1b :
         /* Sbx b, a */
-        sbx(instruction);
+        sbxInst(instruction);
         break;
       case 0x1c :
         break;
@@ -140,11 +140,11 @@ void run() {
         break;
       case 0x1e :
         /* Sdi b, a */
-        sdi(instruction);
+        sdiInst(instruction);
         break;
       case 0x1f :
         /* Std b, a */
-        std(instruction);
+        stdInst(instruction);
         break;
       default :
         printf("Unknown opCode : %x\n", opCode);
@@ -160,39 +160,39 @@ void specialInstruction(uint16_t instruction) {
   switch (opCode) {
     case 0x01 :
       /* Jsr a */
-      jsr(instruction);
+      jsrInst(instruction);
       break;
     case 0x08 :
       /* Int a */
-      softInteruption(instruction);
+      intInst(instruction);
       break;
     case 0x09 :
       /* Iag a */
-      iag(instruction);
+      iagInst(instruction);
       break;
     case 0x0a :
       /* ias a */
-      ias(instruction);
+      iasInst(instruction);
       break;
     case 0x0b :
       /* rfi a */
-      rfi(instruction);
+      rfiInst(instruction);
       break;
     case 0x0c :
       /* iaq a */
-      iaq(instruction);
+      iaqInst(instruction);
       break;
     case 0x10 :
       /* hwn a */
-      hwn(instruction);
+      hwnInst(instruction);
       break;
     case 0x11 :
       /* hwq a */
-      hwq(instruction);
+      hwqInst(instruction);
       break;
     case 0x12 :
       /* hwi a */
-      hwi(instruction);
+      hwiInst(instruction);
       break;
     default :
       printf("Unknown opCode : %x\n", opCode);
