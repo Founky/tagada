@@ -150,6 +150,7 @@ void run() {
         printf("Unknown opCode : %x\n", opCode);
         break;
     }
+    regs.PC++;
   }
 }
 

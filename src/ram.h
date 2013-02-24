@@ -9,4 +9,7 @@
 
 extern uint16_t ram[RAM_SIZE];
 
+void printRam(uint32_t start, uint32_t end);
+void initRam(char * filePath);
+
 #endif
