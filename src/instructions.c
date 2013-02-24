@@ -38,7 +38,7 @@ uint16_t decodeAValue(uint16_t instruction) {
     return ram[*((uint16_t *)&regs + v - 0x10) + ram[regs.PC + 0x01]];
     /* Pops the stack and return the head as value */
   } else if (v == 0x18) {
-    return ram[regs.SP--];
+    return ram[regs.SP++];
     /* Return [SP] */
   } else if (v == 0x19) {
     return ram[regs.SP];
@@ -121,7 +121,7 @@ uint16_t *decodeAAddress(uint16_t instruction) {
     return &ram[*((uint16_t *)&regs + v - 0x10) + ram[regs.PC + 0x01]];
     /* Pops the stack and return the head as value */
   } else if (v == 0x18) {
-    return &ram[regs.SP--];
+    return &ram[regs.SP++];
     /* Return [SP] */
   } else if (v == 0x19) {
     return &ram[regs.SP];
@@ -163,7 +163,7 @@ uint16_t *decodeBAddress(uint16_t instruction) {
     return &ram[*((uint16_t *)&regs + v - 0x10) + ram[regs.PC + 0x01]];
     /* Push : increment SP and return &ram[SP] */
   } else if (v == 0x18) {
-    return &ram[++regs.SP];
+    return &ram[--regs.SP];
     /* Return [SP] */
   } else if (v == 0x19) {
     return &ram[regs.SP];

@@ -26,8 +26,6 @@ int initSuiteOperator(void) {
   regs.PC = 0x01;
   ram[regs.PC + 1] = MAGIC;
   ram[MAGIC] = MAGIC;
-  regs.SP = 0x10;
-  ram[regs.SP] = MAGIC;
   return 0;
 }
 int cleanSuiteOperator(void) { return 0; }
@@ -49,7 +47,18 @@ void testDecodeAValueRegisterWordPointer(void) {
 
 void testDecodeAValuePOP(void) {
   uint16_t i = SET_OP_A(0x18); /* Set a operand */
+  regs.SP = 0x10;
+  ram[regs.SP] = MAGIC;
   CU_ASSERT_EQUAL(decodeAValue(i), MAGIC);
+  CU_ASSERT_EQUAL(regs.SP, 0x11);
+}
+
+void testDecodeAValuePEEK(void) {
+  uint16_t i = SET_OP_A(0x19); /* Set a operand */
+  regs.SP = 0x10;
+  ram[regs.SP] = MAGIC;
+  CU_ASSERT_EQUAL(decodeAValue(i), MAGIC);
+  CU_ASSERT_EQUAL(regs.SP, 0x10);
 }
 
 extern void initTestInstruction(void) __attribute__ ((constructor));
@@ -69,6 +78,7 @@ void init() {
   if ((NULL == CU_add_test(pSuite, "Decode A value register", testDecodeAValueRegister)) ||
       (NULL == CU_add_test(pSuite, "Decode A value pointer word register", testDecodeAValueRegisterWordPointer)) ||
       (NULL == CU_add_test(pSuite, "Decode A value POP", testDecodeAValuePOP)) ||
+      (NULL == CU_add_test(pSuite, "Decode A value PEEK", testDecodeAValuePEEK)) ||
       (NULL == CU_add_test(pSuite, "Decode A value pointer register", testDecodeAValueRegisterPointer)))
   {
     CU_cleanup_registry();
