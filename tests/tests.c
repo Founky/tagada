@@ -17,11 +17,10 @@ void addInit(void (*init)(void)) {
   nbInits++;
 }
 
-int main()
-{
+int main() {
   /* initialize the CUnit test registry */
   if (CUE_SUCCESS != CU_initialize_registry()) {
-     exit(CU_get_error());
+    exit(CU_get_error());
   }
 
   /* Run all the inits */
@@ -36,5 +35,6 @@ int main()
 
   /* Clean up registry and return */
   CU_cleanup_registry();
+
   return CU_get_error();
 }

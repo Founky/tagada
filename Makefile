@@ -31,7 +31,7 @@ test: $(TOBJECTS)
 	@$(CC) -lcunit $^ -o bin/$@ $(CFLAGS)
 
 runtest: test
-	bin/test
+	@bin/test
 
 build/%.o: src/%.c
 	@mkdir -p $(dir $@)
