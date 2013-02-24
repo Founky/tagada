@@ -23,6 +23,7 @@ build/%.o: src/%.c
 
 clean:
 	rm -rf $(OBJECTS)
+	rm -f bin/tagada
 
 info:
 	@echo $(SOURCES)

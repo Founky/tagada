@@ -6,10 +6,15 @@
 #include "ram.h"
 #include "instructions.h"
 
+
+struct registerFile regs;
+uint8_t intQueing;
+
 void initCore() {
+  /* note : when set to 0,
+   * SP virtually points to ram[RAM_SIZE] */
   memset(&regs, 0, 12 * sizeof(uint16_t));
-  /* note : when set to 0
-   * SP virtually points to the first slot of the stack + 1 */
+  intQueing = 0;
 }
 
 void specialInstruction(uint16_t instruction);

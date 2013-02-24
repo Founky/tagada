@@ -413,7 +413,17 @@ void jsr(uint16_t instruction) {
   regs.PC = decodeAValue(instruction);
 }
 
+/* triggers a software interrupt with message a */
 void softInteruption(uint16_t instruction) {
+  if (regs.IA) {
+    intQueing = 1;
+    ram[--regs.SP] = regs.PC;
+    ram[--regs.SP] = regs.A;
+    regs.PC = regs.IA;
+    regs.A = OP_A(instruction);
+  } else {
+    /* TODO: do nothing but still takes 4 cycles */
+  }
 }
 
 /* sets a to IA */
@@ -427,9 +437,20 @@ void ias(uint16_t instruction) {
 }
 
 void rfi(uint16_t instruction) {
+  intQueing = 0;
+  regs.A = ram[regs.SP++];
+  regs.PC = ram[regs.SP++];
 }
 
+/* if a is nonzero, interrupts will be added to the queue
+ * instead of triggered. if a is zero, interrupts will be
+ * triggered as normal again */
 void iaq(uint16_t instruction) {
+  if (OP_A(instruction) == 0) {
+    intQueing = 0;
+  } else {
+    intQueing = 1;
+  }
 }
 
 void hwn(uint16_t instruction) {

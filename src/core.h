@@ -5,8 +5,7 @@
 
 #include <stdint.h>
 
-/* TODO: don't declare variable in .h */
-struct {
+struct registerFile {
   uint16_t A; /* General registers */
   uint16_t B;
   uint16_t C;
@@ -19,7 +18,10 @@ struct {
   uint16_t SP; /* Stack pointer */
   uint16_t EX; /* Extra/excess register */
   uint16_t IA; /* Interrupt address */
-} regs;
+};
+
+extern struct registerFile regs;
+extern uint8_t intQueing;
 
 /* initialize DCPU16 core */
 void initCore();
