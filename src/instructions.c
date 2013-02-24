@@ -62,7 +62,7 @@ uint16_t decodeAValue(uint16_t instruction) {
     return ram[regs.PC + 0x01];
     /* Small literal value from -1 to 0x1e (30) */
   } else if (v <= 0x3f) {
-    return 0x3f - v - 0x01;
+    return v - 0x3F + 0x20 - 0x01;
   }
   return 0x00;
 }
