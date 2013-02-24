@@ -2,6 +2,7 @@ CC = gcc
 LD = ld
 CFLAGS = -Wall -g -Werror
 LDFLAGS =
+INCLUDES = src
 SOURCES = src/main.c src/core.c src/instructions.c src/ram.c
 TSOURCES = 
 OBJECTS = $(call SRC_2_OBJ, $(SOURCES))
@@ -30,17 +31,17 @@ test: $(TOBJECTS)
 	@$(CC) -lcunit $^ -o bin/$@ $(CFLAGS)
 
 runtest: test
-	bin/test
+	@bin/test
 
 build/%.o: src/%.c
 	@mkdir -p $(dir $@)
 	@echo "  [CC]    $< -> $@"
-	@$(CC) $(CFLAGS) -o $@ -c $<
+	@$(CC) -I$(INCLUDES) $(CFLAGS) -o $@ -c $<
 
 build/%.o: tests/%.c
 	@mkdir -p $(dir $@)
 	@echo "  [CC]    $< -> $@"
-	@$(CC) $(CFLAGS) -o $@ -c $<
+	@$(CC) -I$(INCLUDES) $(CFLAGS) -o $@ -c $<
 
 clean:
 	rm -rf $(OBJECTS)

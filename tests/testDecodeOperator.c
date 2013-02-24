@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <stdint.h>
 
 #include <CUnit/Basic.h>
 #include <CUnit/Console.h>
@@ -8,44 +9,70 @@
 
 #include "tests.h"
 
-int init_suite_success(void) { return 0; }
-int clean_suite_success(void) { return 0; }
+#include "core.h"
+#include "ram.h"
+#include "instructions.h"
 
-void test_success1(void) {
-   CU_ASSERT(1);
+#define MAGIC 0x10c
+
+/* Declare the private functions to test */
+uint16_t decodeAValue(uint16_t instruction);
+
+int initSuiteOperator(void) {
+  /* Set the registers */
+  regs.A = MAGIC;
+  regs.B = 0x00;
+  ram[regs.B] = MAGIC;
+  regs.PC = 0x01;
+  ram[regs.PC + 1] = MAGIC;
+  ram[MAGIC] = MAGIC;
+  regs.SP = 0x10;
+  ram[regs.SP] = MAGIC;
+  return 0;
+}
+int cleanSuiteOperator(void) { return 0; }
+
+void testDecodeAValueRegister(void) {
+  uint16_t i = SET_OP_A(0x00); /* Set a operand */
+  CU_ASSERT_EQUAL(decodeAValue(i), MAGIC);
 }
 
-void test_success2(void) {
-   CU_ASSERT_NOT_EQUAL(2, -1);
+void testDecodeAValueRegisterPointer(void) {
+  uint16_t i = SET_OP_A(0x09); /* Set a operand */
+  CU_ASSERT_EQUAL(decodeAValue(i), MAGIC);
 }
 
-void test_success3(void) {
-   CU_ASSERT_STRING_EQUAL("string #1", "string #1");
+void testDecodeAValueRegisterWordPointer(void) {
+  uint16_t i = SET_OP_A(0x11); /* Set a operand */
+  CU_ASSERT_EQUAL(decodeAValue(i), MAGIC);
 }
 
-void test_success4(void) {
-   CU_ASSERT_STRING_NOT_EQUAL("string #1", "string #2");
+void testDecodeAValuePOP(void) {
+  uint16_t i = SET_OP_A(0x18); /* Set a operand */
+  CU_ASSERT_EQUAL(decodeAValue(i), MAGIC);
 }
 
 extern void initTestInstruction(void) __attribute__ ((constructor));
 
 void init() {
+
   CU_pSuite pSuite = NULL;
 
   /* add a suite to the registry */
-  pSuite = CU_add_suite("Suite_success", init_suite_success, clean_suite_success);
+  pSuite = CU_add_suite("Decode operators", initSuiteOperator, cleanSuiteOperator);
   if (NULL == pSuite) {
-     CU_cleanup_registry();
-       exit(CU_get_error());
+    CU_cleanup_registry();
+    exit(CU_get_error());
   }
 
   /* add the tests to the suite */
-  if ((NULL == CU_add_test(pSuite, "successful_test_1", test_success1)) ||
-      (NULL == CU_add_test(pSuite, "successful_test_2", test_success2)) ||
-      (NULL == CU_add_test(pSuite, "successful_test_3", test_success3)))
+  if ((NULL == CU_add_test(pSuite, "Decode A value register", testDecodeAValueRegister)) ||
+      (NULL == CU_add_test(pSuite, "Decode A value pointer word register", testDecodeAValueRegisterWordPointer)) ||
+      (NULL == CU_add_test(pSuite, "Decode A value POP", testDecodeAValuePOP)) ||
+      (NULL == CU_add_test(pSuite, "Decode A value pointer register", testDecodeAValueRegisterPointer)))
   {
-     CU_cleanup_registry();
-     exit(CU_get_error());
+    CU_cleanup_registry();
+    exit(CU_get_error());
   }
 }
 
