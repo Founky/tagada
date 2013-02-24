@@ -303,13 +303,31 @@ void xor(uint16_t instruction) {
   *decodeBAddress(instruction) = decodeBValue(instruction) ^ decodeAValue(instruction);
 }
 
+/* shifts b to the right by a bits. 
+ * EX = the lower a bits of b that were shifted out  */
 void shr(uint16_t instruction) {
+  uint32_t opA = (uint32_t)decodeAValue(instruction);
+  uint32_t opB = (uint32_t)decodeBValue(instruction);
+  regs.EX = (uint16_t)((opB << 16) >> opA);
+  *decodeBAddress(instruction) = (uint16_t)(opB >> opA);
 }
 
+/* shifts b to the right by a bits (signed). 
+ * EX = the lower a bits of b that were shifted out  */
 void asr(uint16_t instruction) {
+  int32_t opA = (int32_t)decodeAValue(instruction);
+  int32_t opB = (int32_t)decodeBValue(instruction);
+  regs.EX = (uint16_t)((opB << 16) >> opA);
+  *decodeBAddress(instruction) = (uint16_t)(opB >> opA);
 }
 
+/* shifts b to the left by a bits (signed). 
+ * EX = the upper a bits of b that were shifted out  */
 void shl(uint16_t instruction) {
+  uint32_t opA = (uint32_t)decodeAValue(instruction);
+  uint32_t opB = (uint32_t)decodeBValue(instruction);
+  regs.EX = (uint16_t)((opB << opA) >> 16);
+  *decodeBAddress(instruction) = (uint16_t)(opB << opA);
 }
 
 /* performs next instruction only if (b&a)!=0 */
