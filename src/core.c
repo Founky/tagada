@@ -1,6 +1,7 @@
 #include <string.h>
 #include <stdint.h>
 #include <stdio.h>
+#include <stdlib.h>
 
 #include "core.h"
 #include "ram.h"
@@ -25,6 +26,10 @@ void run() {
   while (1) {
     instruction = ram[regs.PC];
     opCode = OC(instruction);
+    printf("----- NEW INSTRUCTION -----\n");
+    printf("%04x -- o: %x, b: %x, a: %x\n", instruction, OC(instruction), OP_B(instruction) , OP_A(instruction));
+    printRam(0,4);
+    printRegisters();
     switch (opCode) {
       case 0x00 : 
         /* special instruction */
@@ -147,7 +152,8 @@ void run() {
         stdInst(instruction);
         break;
       default :
-        printf("Unknown opCode : %x\n", opCode);
+        printf("Unknown opCode : %x\nExiting\n", opCode);
+        exit(1);
         break;
     }
     regs.PC++;
@@ -196,7 +202,14 @@ void specialInstruction(uint16_t instruction) {
       hwiInst(instruction);
       break;
     default :
-      printf("Unknown opCode : %x\n", opCode);
+      printf("Unknown opCode : %x\nExiting\n", opCode);
+      exit(1);
       break;
   }
+}
+
+void printRegisters() {
+  printf("A :%04x B :%04x C :%04x X :%04x\n", regs.A, regs.B, regs.C, regs.X);
+  printf("Y :%04x Z :%04x I :%04x J :%04x\n", regs.Y, regs.Z, regs.I, regs.J);
+  printf("PC:%04x SP:%04x EX:%04x IA:%04x\n", regs.PC, regs.SP, regs.EX, regs.IA);
 }

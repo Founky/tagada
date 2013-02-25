@@ -27,4 +27,6 @@ extern uint8_t intQueing;
 void initCore();
 /* fetch next instruction, decode and execute */
 void run();
+
+void printRegisters();
 #endif

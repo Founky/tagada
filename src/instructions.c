@@ -35,7 +35,7 @@ uint16_t decodeAValue(uint16_t instruction) {
     return ram[*((uint16_t *)&regs + v - 0x08)];
     /* Ram[reg + nextword] */
   } else if (v < 0x18) {
-    return ram[*((uint16_t *)&regs + v - 0x10) + ram[regs.PC + 0x01]];
+    return ram[*((uint16_t *)&regs + v - 0x10) + ram[regs.PC++ + 0x01]];
     /* Pops the stack and return the head as value */
   } else if (v == 0x18) {
     return ram[regs.SP++];
@@ -44,7 +44,7 @@ uint16_t decodeAValue(uint16_t instruction) {
     return ram[regs.SP];
     /* ram[SP + nextword] */
   } else if (v == 0x1a) {
-    return ram[regs.SP + ram[regs.PC + 0x01]];
+    return ram[regs.SP + ram[regs.PC++ + 0x01]];
     /* SP */
   } else if (v == 0x1b) {
     return ram[regs.SP];
@@ -56,10 +56,10 @@ uint16_t decodeAValue(uint16_t instruction) {
     return ram[regs.EX];
     /* ram[next word] */
   } else if (v == 0x1e) {
-    return ram[ram[regs.PC + 0x01]];
+    return ram[ram[regs.PC++ + 0x01]];
     /* nextword */
   } else if (v == 0x1f) {
-    return ram[regs.PC + 0x01];
+    return ram[regs.PC++ + 0x01];
     /* Small literal value from -1 to 0x1e (30) */
   } else if (v <= 0x3f) {
     return v - 0x3F + 0x20 - 0x01;
@@ -78,7 +78,7 @@ uint16_t decodeBValue(uint16_t instruction) {
     return ram[*((uint16_t *)&regs + v - 0x08)];
     /* Ram[reg + nextword] */
   } else if (v < 0x18) {
-    return ram[*((uint16_t *)&regs + v - 0x10) + ram[regs.PC + 0x01]];
+    return ram[*((uint16_t *)&regs + v - 0x10) + ram[regs.PC++ + 0x01]];
     /* PUSH Meaningless for B value */
   } else if (v == 0x18) {
     return 0x00;
@@ -87,7 +87,7 @@ uint16_t decodeBValue(uint16_t instruction) {
     return ram[regs.SP];
     /* ram[SP + nextword] */
   } else if (v == 0x1a) {
-    return ram[regs.SP + ram[regs.PC + 0x01]];
+    return ram[regs.SP + ram[regs.PC++ + 0x01]];
     /* SP */
   } else if (v == 0x1b) {
     return ram[regs.SP];
@@ -99,10 +99,10 @@ uint16_t decodeBValue(uint16_t instruction) {
     return ram[regs.EX];
     /* ram[next word] */
   } else if (v == 0x1e) {
-    return ram[ram[regs.PC + 0x01]];
+    return ram[ram[regs.PC++ + 0x01]];
     /* nextword */
   } else if (v == 0x1f) {
-    return ram[regs.PC + 0x01];
+    return ram[regs.PC++ + 0x01];
   }
   return 0x00;
 }
